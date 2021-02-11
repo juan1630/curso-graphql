@@ -10,7 +10,13 @@ const url = "http://localhost:4000";
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    context: () => {
+        const miContext = "Hola!!!";
+        return {
+            miContext
+        }
+    }
 });
 
 //arrancamos el servidor 

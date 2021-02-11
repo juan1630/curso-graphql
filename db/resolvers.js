@@ -22,8 +22,12 @@ const cursos = [{
 
 const resolvers = {
     Query: {
-        obtenerCursos: () => cursos,
-        obtenerTacnologia: () => cursos
+        obtenerCursos: (_, { input }, ctx, info) => {
+            console.log(ctx);
+            const resultados = cursos.filter(curso => curso.tecnologia === input.tecnologia);
+            // cursos
+            return resultados;
+        }
     }
 }
 
