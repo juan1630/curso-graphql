@@ -5,8 +5,18 @@ const resolvers = require('./db/resolvers');
 
 const url = "http://localhost:4000";
 
+const conectToDB = require('./db/db');
+
 
 // servidor 
+
+
+
+/// conectando a la DB
+conectToDB()
+    .then(msj => console.log(msj))
+    .catch(error => console.log(error));
+
 
 const server = new ApolloServer({
     typeDefs,

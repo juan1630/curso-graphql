@@ -1,0 +1,1 @@
+const uriDB = "localhost:27017";
