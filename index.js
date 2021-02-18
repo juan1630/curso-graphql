@@ -13,9 +13,7 @@ const conectToDB = require('./db/db');
 
 
 /// conectando a la DB
-conectToDB()
-    .then(msj => console.log(msj))
-    .catch(error => console.log(error));
+conectToDB();
 
 
 const server = new ApolloServer({
@@ -31,9 +29,10 @@ const server = new ApolloServer({
 
 //arrancamos el servidor 
 
-server.listen().then(() => {
-    console.log(`Server running on URL: ${url}`);
-});
+server.listen()
+    .then((resp) => {
+        console.log(`Server running on URL: ${url}`);
+    });
 
 
 // una query es equivalente al get o al select, es la forma en la que se extraen los datos
