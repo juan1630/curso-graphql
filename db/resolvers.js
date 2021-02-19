@@ -1,7 +1,8 @@
-// importamos el modelo del usuario
-
+// importamos los modulos
 
 const Usuario = require('../models/Usuarios');
+const Producto = require('../models/producto');
+
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config({ path: 'variables.env' });
@@ -83,9 +84,23 @@ const resolvers = {
             }
 
         },
-
         // termina el mutation de autenticar
-    }
+
+        nuevoProducto: async(_, { input }) => {
+            console.log(input);
+            try {
+                const producto = new Producto(input);
+                // grabar en la DB
+                const resultado = await producto.save();
+                return resultado;
+
+            } catch (error) {
+                console.log(error);
+                throw new Error('Se produjo un error', error);
+            }
+        }
+
+    },
 }
 
 
