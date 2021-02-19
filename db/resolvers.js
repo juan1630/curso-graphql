@@ -25,7 +25,35 @@ const resolvers = {
         obtenerUsuario: async(_, { token }) => {
             const usuarioId = await jwt.verify(token, process.env.salt);
             return usuarioId;
+        },
+        //Productos
+        obtenerProducots: async() => {
+            try {
+
+                const productos = await Producto.find({});
+                return productos;
+
+            } catch (error) {
+
+                console.log(error);
+                throw new Error('Algo pasó');
+            }
+        },
+        // Productos
+
+        obtenerProducto: async(_, { id }) => {
+            // revisar el producto existe 
+            const producto = await Producto.findById(id);
+
+            if (!producto) {
+
+                throw new Error('Producto no encontrado')
+            }
+
+            return producto;
+
         }
+
     },
 
     Mutation: {
@@ -98,7 +126,8 @@ const resolvers = {
                 console.log(error);
                 throw new Error('Se produjo un error', error);
             }
-        }
+        },
+
 
     },
 }
