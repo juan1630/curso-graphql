@@ -14,6 +14,8 @@ const typeDefs = gql `
     type Token {
         token: String
     }
+
+
     input UsuarioInput {
         name: String!
         lastName: String!
@@ -27,11 +29,12 @@ const typeDefs = gql `
     }
     
     type Query {
-        obtenerCursos: String
+        obtenerUsuario(token: String! ): Usuaurio
     }
 
 
     type Mutation {
+
         nuevoUsuario(input: UsuarioInput ): Usuaurio
         autenticarUsuario(input: AutenticarInput ): Token
     }

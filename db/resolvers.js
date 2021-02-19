@@ -21,10 +21,15 @@ const crearToken = (usuario, salt, expirece) => {
 
 const resolvers = {
     Query: {
-        obtenerCursos: () => "Algo"
+        obtenerUsuario: async(_, { token }) => {
+            const usuarioId = await jwt.verify(token, process.env.salt);
+            return usuarioId;
+        }
     },
 
     Mutation: {
+
+
         nuevoUsuario: async(_, { input }) => {
 
             const { email, password } = input;
@@ -53,10 +58,12 @@ const resolvers = {
                 throw new Error('Algo pasó con la DB');
             }
         },
+        // termina el post del usuario
+
+        // incia la autenticacion del usuario
 
         autenticarUsuario: async(_, { input }) => {
 
-            console.log(input);
             // ver si el usuario existe 
             const { email, password } = input;
             const existeUsuario = await Usuario.findOne({ email });
@@ -71,8 +78,11 @@ const resolvers = {
                 throw new Error('El password es incorrecto');
             }
             // retornar el token
-            crearToken(existeUsuario, process.env.salt, '24h');
-        }
+            return {
+                token: crearToken(existeUsuario, process.env.salt, '24h')
+            }
+
+        },
 
         // termina el mutation de autenticar
     }
