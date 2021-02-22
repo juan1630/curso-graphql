@@ -1,8 +1,10 @@
-// importamos los modulos
+// colections
 
 const Usuario = require('../models/Usuarios');
 const Producto = require('../models/producto');
+const Cliente = require('../models/cliente');
 
+// importamos los modulos
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config({ path: 'variables.env' });
@@ -128,6 +130,74 @@ const resolvers = {
             }
         },
 
+        // update actualizar el producto
+        actualizarProdcuto: async(_, { id, input }, ) => {
+            // revisamos el producto existe 
+            let producto = await Producto.findById(id);
+
+            if (!producto) {
+                throw new Error('El producto no existe');
+            }
+            // guardarlo en la DB
+            // con esta propiedad se devuelven los valores actualizados
+            producto = await Producto.findOneAndUpdate({ _id: id }, input, { new: true });
+            return producto;
+        },
+
+        // eliminar un producto 
+        eliminarProducto: async(_, { id }) => {
+
+            const producto = await Producto.findById(id);
+
+            if (!producto) {
+                throw new Error('El producto no existe');
+            }
+
+            await Producto.findOneAndDelete(id);
+
+            return 'Se elimino el producto';
+
+
+        },
+
+
+        // clientes 
+        nuevoCliente: async(_, { input }) => {
+
+            const { email } = input;
+
+            console.log(input);
+
+            // verificar que el cliente no este registrado
+
+            const cliente = Cliente.findOne(email);
+
+            if (!cliente) {
+                throw new Error('Ya existe el cliente');
+
+            }
+
+            const nuevoCliente = new Cliente(input);
+
+            nuevoCliente.vendedor = "602df20bd9376b266c82b509";
+
+            try {
+                // asignar vendedor
+
+
+                // guardar en la DB 
+                const resultado = await nuevoCliente.save();
+
+                return resultado;
+
+            } catch (error) {
+
+                console.log(error);
+                throw new Error(error);
+
+            }
+
+        }
 
     },
 }

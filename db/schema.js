@@ -24,6 +24,16 @@ const typeDefs = gql `
         token: String
     }
 
+    type Cliente {
+        id:ID
+        nombre: String
+        apellido: String
+        empresa: String
+        email: String
+        telefono: String
+        vendedor:ID
+    }
+
 
     input UsuarioInput {
         name: String!
@@ -41,6 +51,15 @@ const typeDefs = gql `
         nombre: String!
         existencia: Int!
         precio: Float!
+    }
+
+    input ClienteInput {
+        nombre: String!
+        apellido: String!
+        empresa: String!
+        email: String!
+        telefono:String
+
     }
 
     type Query {
@@ -61,6 +80,11 @@ const typeDefs = gql `
         
         #productos
         nuevoProducto(input: ProductoInput ): Producto
+        actualizarProdcuto( id: ID!, input: ProductoInput ):Producto
+        eliminarProducto ( id: ID! ): String
+
+        #clientes
+        nuevoCliente( input: ClienteInput ): Cliente
     }
 `;
 
