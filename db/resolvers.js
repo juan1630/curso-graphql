@@ -23,6 +23,7 @@ const crearToken = (usuario, salt, expirece) => {
 // Resolvers 
 
 const resolvers = {
+
     Query: {
         obtenerUsuario: async(_, { token }) => {
             const usuarioId = await jwt.verify(token, process.env.salt);
@@ -54,7 +55,32 @@ const resolvers = {
 
             return producto;
 
+        },
+
+
+        obtenerClientes: async() => {
+            try {
+                const clientes = await Cliente.find({});
+                return clientes;
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+        obtenerClientesVendedor: async(_, {}, ctx) => {
+
+
+            try {
+
+                const clientes = await Cliente.find({ vendedor: ctx.usuario.id });
+                return clientes;
+
+            } catch (error) {
+                console.log(error);
+
+            }
         }
+
 
     },
 
@@ -162,11 +188,12 @@ const resolvers = {
 
 
         // clientes 
-        nuevoCliente: async(_, { input }) => {
+        nuevoCliente: async(_, { input }, ctx) => {
 
             const { email } = input;
 
-            console.log(input);
+
+            // console.log(ctx);
 
             // verificar que el cliente no este registrado
 
@@ -179,9 +206,10 @@ const resolvers = {
 
             const nuevoCliente = new Cliente(input);
 
-            nuevoCliente.vendedor = "602df20bd9376b266c82b509";
+            nuevoCliente.vendedor = ctx.usuario.id;
 
             try {
+
                 // asignar vendedor
 
 

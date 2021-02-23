@@ -1,6 +1,8 @@
 const { ApolloError, ApolloServer } = require('apollo-server');
 const typeDefs = require('./db/schema');
 const resolvers = require('./db/resolvers');
+const jwt = require('jsonwebtoken');
+require('dotenv').config({ path: 'variables.env' });
 
 
 const url = "http://localhost:4000";
@@ -19,10 +21,24 @@ conectToDB();
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: () => {
-        const miContext = "Hola!!!";
-        return {
-            miContext
+    context: ({ req }) => {
+        // se pasa a todos los resolvers
+        // console.log();
+        const token = req.headers['authorization'] || "";
+
+        if (token) {
+            try {
+
+                const usuario = jwt.verify(token, process.env.salt);
+                // console.log(usuario);
+                return {
+                    usuario
+                }
+
+            } catch (error) {
+                console.log(error);
+                throw new Error('Un error de autenticacion');
+            }
         }
     }
 });
