@@ -74,6 +74,7 @@ const typeDefs = gql `
         #Clientes
         obtenerClientes: [Cliente]
         obtenerClientesVendedor:[Cliente]
+        obtenerCliente( id: ID! ): Cliente
     }
 
 
@@ -89,6 +90,8 @@ const typeDefs = gql `
 
         #clientes
         nuevoCliente( input: ClienteInput ): Cliente
+        actualizarCliente(id:ID!, input: ClienteInput): Cliente
+        eliminarCliente( id: ID! ): String
     }
 `;
 

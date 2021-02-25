@@ -79,6 +79,26 @@ const resolvers = {
                 console.log(error);
 
             }
+        },
+
+        obtenerCliente: async(_, { id }, ctx) => {
+            try {
+
+                const cliente = await Cliente.findById(id);
+
+                if (!cliente) {
+                    throw new Error('El cliente no existe');
+                }
+
+                if (cliente.vendedor.toString() !== ctx.usuario.id) {
+                    throw new Error('No tienes las credenciales');
+                }
+                return cliente;
+            } catch (error) {
+
+                console.log(error);
+                throw new Error('Algo pasó', error);
+            }
         }
 
 
@@ -225,6 +245,53 @@ const resolvers = {
 
             }
 
+        },
+        actualizarCliente: async(_, { id, input }, ctx) => {
+
+            // verificar si existe el cliente
+
+            const cliente = await Cliente.findById(id);
+
+            if (!cliente) {
+                throw new Error('No encontró el Cliente');
+            }
+
+            // verificar si el usuario que lo edita lo creo
+            if (ctx.usuario.id !== cliente.vendedor.toString()) {
+
+                throw new Error('No puedes modificar este cliente');
+            }
+
+            // modificar al cliente
+
+            try {
+
+                const clienteEditado = await Cliente.findOneAndUpdate({ _id: id }, input, { new: true });
+                return clienteEditado;
+
+            } catch (error) {
+                throw new Error('No se pudo modificar el cliente');
+            }
+        },
+        eliminarCliente: async(_, { id }, ctx) => {
+
+            // verificar que existe el cleinte
+
+            const cliente = await Cliente.findById(id);
+
+            if (!cliente) {
+                throw new Error('Él cliente no existe');
+            }
+
+            // que lo pueda eliminar el vendedor 
+
+            if (cliente.vendedor !== ctx.usuario.id) {
+                throw new Error('No puedes eliminar a este cliente');
+            }
+
+            // eliminar el cliente
+            Cliente.findOneAndDelete({ _id: id });
+            return 'Se eliminó el cliente';
         }
 
     },
