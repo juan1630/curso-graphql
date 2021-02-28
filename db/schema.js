@@ -35,6 +35,21 @@ const typeDefs = gql `
     }
 
 
+    type Pedido {
+        id: ID
+        pedido: [PedidosGrupo]
+        cliente: ID
+        vendedor: ID
+        fecha: String
+        estado : EstadoPedido
+    }
+
+    type PedidosGrupo {
+        id:ID!
+        cantidad: Int
+    }
+
+
     input UsuarioInput {
         name: String!
         lastName: String!
@@ -60,6 +75,25 @@ const typeDefs = gql `
         email: String!
         telefono:String
 
+    }
+
+    
+    input PedidosInput {
+        pedido : [PedidoProductoInput]
+        total: Float!
+        cliente:ID!
+        estado: EstadoPedido
+    }
+    
+    input PedidoProductoInput {
+        id: ID!
+        cantidad: Int
+    }
+    
+    enum EstadoPedido {
+        PENDIENTE
+        COMPLETADO
+        CANCELADO
     }
 
     type Query {
@@ -92,6 +126,9 @@ const typeDefs = gql `
         nuevoCliente( input: ClienteInput ): Cliente
         actualizarCliente(id:ID!, input: ClienteInput): Cliente
         eliminarCliente( id: ID! ): String
+
+        #Pedidos
+        nuevoPedido( input: PedidosInput  ): Pedido
     }
 `;
 

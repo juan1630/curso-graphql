@@ -292,6 +292,33 @@ const resolvers = {
             // eliminar el cliente
             Cliente.findOneAndDelete({ _id: id });
             return 'Se eliminó el cliente';
+        },
+        nuevoPedido: async(_, { input }, ctx) => {
+
+            const { cliente } = input;
+
+            // verificar si el cliente existe o no
+
+            const clienteExiste = Cliente.findById(cliente);
+
+
+            if (!clienteExiste) {
+                throw new Error('Él cliente no existe en la DB');
+            }
+
+
+            if (clienteExiste.vendedor !== ctx.usuario.id) {
+                throw new Error('No tienes las credenciales');
+
+            }
+
+            // verificar si el cliente es del vendedor
+
+            //recisar el stock
+
+
+            //guardar en la DB
+
         }
 
     },
