@@ -3,6 +3,7 @@
 const Usuario = require('../models/Usuarios');
 const Producto = require('../models/producto');
 const Cliente = require('../models/cliente');
+const Pedido = require('../models/Pedido');
 
 // importamos los modulos
 const bcryptjs = require('bcryptjs');
@@ -99,7 +100,20 @@ const resolvers = {
                 console.log(error);
                 throw new Error('Algo pasó', error);
             }
+        },
+        obtenerPedidos: async () => {
+            //obtenemos todos los pedidos
+
+            try {
+                const pedidos = await Pedido.find();
+                return pedidos;
+                
+            }catch( error  ){
+                console.log( error );
+                throw new Error('No se encontrò')
+            }
         }
+
 
 
     },
@@ -108,6 +122,8 @@ const resolvers = {
 
 
         nuevoUsuario: async(_, { input }) => {
+
+            console.log(input)
 
             const { email, password } = input;
 
@@ -163,7 +179,7 @@ const resolvers = {
         // termina el mutation de autenticar
 
         nuevoProducto: async(_, { input }) => {
-            console.log(input);
+            // console.log(input);
             try {
                 const producto = new Producto(input);
                 // grabar en la DB
@@ -291,35 +307,76 @@ const resolvers = {
 
             // eliminar el cliente
             Cliente.findOneAndDelete({ _id: id });
+            
             return 'Se eliminó el cliente';
+
         },
         nuevoPedido: async(_, { input }, ctx) => {
 
+            // console.log(  input )
+
             const { cliente } = input;
 
+            // console.log( cliente );
             // verificar si el cliente existe o no
 
-            const clienteExiste = Cliente.findById(cliente);
+            let clienteExiste = await Cliente.findById(cliente);
 
+            console.log( clienteExiste.nombre );
 
             if (!clienteExiste) {
                 throw new Error('Él cliente no existe en la DB');
             }
 
+            // verificar si el cliente es del vendedor
 
-            if (clienteExiste.vendedor !== ctx.usuario.id) {
+            if (clienteExiste.vendedor.toString() !== ctx.usuario.id) {
                 throw new Error('No tienes las credenciales');
 
             }
 
-            // verificar si el cliente es del vendedor
-
-            //recisar el stock
+            //revisar el stock
 
 
-            //guardar en la DB
+            // este nuevo loop evita que se ejecute el codigo que sea asincrono
+                for await( const articulo of input.pedido){ 
+                
+                const { id } = articulo;
 
-        }
+                const producto = await Producto.findById( id );
+
+                if( articulo.cantidad > producto.existencia  ){
+                    throw new Error(`El articulo: ${ producto.nombre } excede la cantidad disponible`);
+                
+                }else {
+
+                    producto.existencia  = producto.existencia - articulo.cantidad;
+                    await producto.save();
+
+                }
+                
+                // console.log("Despues del error");
+
+                const nuevoPedido = new Pedido( input );
+
+
+                // asignar el vendedor
+
+
+                nuevoPedido
+                .vendedor = ctx.usuario.id; 
+
+                //guardar en la DB
+                
+                const resultado = await nuevoPedido.save();
+                return resultado;
+            
+            };
+            
+            // crear un nuevo pedido 
+
+
+        },
 
     },
 }
