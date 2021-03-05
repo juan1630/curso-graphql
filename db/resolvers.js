@@ -26,6 +26,7 @@ const crearToken = (usuario, salt, expirece) => {
 const resolvers = {
 
     Query: {
+
         obtenerUsuario: async(_, { token }) => {
             const usuarioId = await jwt.verify(token, process.env.salt);
             return usuarioId;
@@ -112,6 +113,34 @@ const resolvers = {
                 console.log( error );
                 throw new Error('No se encontrò')
             }
+        },
+        obtenerPedidosVendedor: async (_, {}, ctx ) => {
+
+            try {
+                const pedidos = await Pedido.find( {vendedor: ctx.usuario.id});
+                return pedidos;
+                
+            }catch( error  ){
+                console.log( error );
+                throw new Error('No se encontrò')
+            }
+
+        }, 
+        obtenerPedidoId: async ( _, { id },  ctx ) => {
+
+            //verificar si existe el pedido
+
+            const pedido = await Pedido.findById( id );
+
+            if(!pedido){
+                throw new Error('No existe el pedido');
+            }
+            // que solo el vendedor lo pueda ver
+
+            if( pedido.vendedor.toString() != ctx.usuario.id  ){
+                throw new Error('Accion no permitida');
+            }
+            return pedido;
         }
 
 

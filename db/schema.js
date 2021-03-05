@@ -113,6 +113,8 @@ const typeDefs = gql `
 
         #Pedidos 
         obtenerPedidos: [Pedido]
+        obtenerPedidosVendedor: [Pedido]
+        obtenerPedidoId( id:ID! ): Pedido
     }
 
 
@@ -134,6 +136,7 @@ const typeDefs = gql `
 
         #Pedidos
         nuevoPedido( input: PedidoInput  ): Pedido
+
     }
 `;
 
