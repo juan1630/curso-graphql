@@ -406,6 +406,116 @@ const resolvers = {
 
 
         },
+        actualizarPedido:  async ( _, {  id , input }, ctx ) => {
+            
+
+            // verificar que el pedido exista 
+
+            const pedidoExiste = await Pedido.findById( id  );
+
+
+            if(!pedidoExiste){
+
+                throw new Error('El pedido no existe');
+            }
+
+            // verificar si el cliente existe 
+
+            const clienteExiste = await Cliente.findById( input.cliente  );
+
+
+            if(!clienteExiste){
+                throw new Error('El cliente no existe');
+                
+            }
+
+            // verificar que solo el usuario que lo registro lo pueda editar
+
+            if(  ctx.usuario.id !=  pedidoExiste.vendedor.toString()  ){
+                
+                throw new Error('No tienes las credenciales');
+
+            }
+            
+            
+            //verificar el stock
+
+            if( input.pedido ){
+
+                for await( const articulo of input.pedido){ 
+                
+                    const { id } = articulo;
+    
+                    const producto = await Producto.findById( id );
+    
+                    if( articulo.cantidad > producto.existencia  ){
+                        throw new Error(`El articulo: ${ producto.nombre } excede la cantidad disponible`);
+                    
+                    }else {
+    
+                        producto.existencia  = producto.existencia - articulo.cantidad;
+                        await producto.save();
+    
+                    }
+                    
+                    // console.log("Despues del error");
+    
+                    const nuevoPedido = new Pedido( input );
+    
+    
+                    // asignar el vendedor
+    
+    
+                    nuevoPedido
+                    .vendedor = ctx.usuario.id; 
+    
+                    //guardar en la DB
+                    
+                    const resultado = await nuevoPedido.save();
+                    return resultado;
+                
+                };
+            }
+         
+
+            // editar el pedido
+
+
+           const pedidoEdit =  Pedido.findByIdAndUpdate( { _id:id }, input, { new: true } );
+
+           return pedidoEdit;
+            
+        },
+
+        eliminarPedido: async (_, { id }, ctx ) => {
+
+            
+            // verificar que el pedido exista
+
+            const pedidoExiste = await Pedido.findById( id );
+
+            if( !pedidoExiste  ) {
+                
+                throw new Error('El pedido no existe');
+
+            }
+
+
+            // verifiar que el vendedor lo haya registrado
+
+            if( pedidoExiste.vendedor  != ctx.usuario.id   ){
+
+                throw new Error('No tienes las credeciales');
+
+            }
+
+
+            await Pedido.findOneAndDelete( id );
+
+            return "Se eliminò el pedido";
+
+
+        }
 
     },
 }
