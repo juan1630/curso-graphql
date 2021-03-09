@@ -56,6 +56,11 @@ const typeDefs = gql `
 
     }
 
+    type TopVendedores {
+        total:Float!
+        vendedor:[Usuaurio]
+    }
+
     input UsuarioInput {
         name: String!
         lastName: String!
@@ -124,6 +129,7 @@ const typeDefs = gql `
 
         #Busquedas avanzadas
         mejoresClientes:[TopCliente]
+        mejoresVendedores:[TopVendedores]
 
     }
 

@@ -161,7 +161,9 @@ const resolvers = {
                         foreignField: "_id",
                         as : 'cliente'
                     }
-                 }, 
+                 }, {
+                     $limit: 10
+                 },
                  {
                      $sort : { total:  -1 }
                  }      
@@ -169,7 +171,32 @@ const resolvers = {
 
 
              return clientes;
-        }   
+        },
+            mejoresVendedores:  async () => {
+
+                const venddores = await Pedido.aggregate([
+                    {$match: { estado: 'COMPLETADO' }},
+                    { $group :{
+                        _id:"$vendedor",
+                        total: { $sum: '$total' }
+                     } },
+                     { 
+                         $lookup: { 
+                         from: 'usuario',
+                         localField: '_id',
+                         foreignField:'_id',
+                         as : 'vendedor'
+                      } },
+                      {
+                          $limit: 2
+                      },
+                      {
+                          $sort: { total: -1 }
+                      }
+                ])
+
+                return venddores;
+            }  
 
 
 
