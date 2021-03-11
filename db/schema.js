@@ -130,6 +130,7 @@ const typeDefs = gql `
         #Busquedas avanzadas
         mejoresClientes:[TopCliente]
         mejoresVendedores:[TopVendedores]
+        buscarProducto ( texto: String!  ): [Producto]
 
     }
 

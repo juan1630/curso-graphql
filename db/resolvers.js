@@ -196,9 +196,14 @@ const resolvers = {
                 ])
 
                 return venddores;
-            }  
+            },
+            buscarProducto : async ( _, {texto}, ctx ) => {
 
+                const productos = await Producto.find({$text : { $search  : texto }} ).limit(10)
 
+                return productos;
+                 
+            }
 
     },
 
