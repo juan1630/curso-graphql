@@ -22,6 +22,7 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     context: ({ req }) => {
+        console.log( req.headers );
         // se pasa a todos los resolvers
         // console.log();
         const token = req.headers['authorization'] || "";
@@ -29,8 +30,8 @@ const server = new ApolloServer({
         if (token) {
             try {
 
-                const usuario = jwt.verify(token, process.env.salt);
-                // console.log(usuario);
+                const usuario = jwt.verify(token.replace('Bearer ', ''), process.env.salt);
+                console.log(usuario);
                 return {
                     usuario
                 }
