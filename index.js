@@ -22,7 +22,7 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     context: ({ req }) => {
-        console.log( req.headers );
+        // console.log( req.headers );
         // se pasa a todos los resolvers
         // console.log();
         const token = req.headers['authorization'] || "";

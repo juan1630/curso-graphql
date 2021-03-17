@@ -27,9 +27,10 @@ const resolvers = {
 
     Query: {
 
-        obtenerUsuario: async(_, { token }) => {
-            const usuarioId = await jwt.verify(token, process.env.salt);
-            return usuarioId;
+        obtenerUsuario: async(_, {}, ctx) => {
+            // const usuarioId = await jwt.verify(token, process.env.salt);
+            console.log( ctx.usuario )
+            return ctx.usuario;
         },
         //Productos
         obtenerProducots: async() => {
