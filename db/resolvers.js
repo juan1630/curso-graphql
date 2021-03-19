@@ -17,7 +17,7 @@ const crearToken = (usuario, salt, expirece) => {
 
     const { id, name, lastName, email } = usuario;
 
-    return jwt.sign({ id }, salt, { expiresIn: expirece });
+    return jwt.sign({ id, name, lastName, email }, salt, { expiresIn: expirece });
 }
 
 
