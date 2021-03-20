@@ -325,7 +325,7 @@ const resolvers = {
 
             const cliente = Cliente.findOne(email);
 
-            if (!cliente) {
+            if (cliente) {
                 throw new Error('Ya existe el cliente');
 
             }
