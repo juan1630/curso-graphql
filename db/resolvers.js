@@ -383,6 +383,8 @@ const resolvers = {
 
             // verificar que existe el cleinte
 
+            console.log( ctx.usuario.id)
+
             const cliente = await Cliente.findById(id);
 
             if (!cliente) {
@@ -391,7 +393,7 @@ const resolvers = {
 
             // que lo pueda eliminar el vendedor 
 
-            if (cliente.vendedor !== ctx.usuario.id) {
+            if (cliente.vendedor != ctx.usuario.id) {
                 throw new Error('No puedes eliminar a este cliente');
             }
 
