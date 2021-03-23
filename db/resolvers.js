@@ -85,6 +85,10 @@ const resolvers = {
         },
 
         obtenerCliente: async(_, { id }, ctx) => {
+
+
+            console.log( id );
+
             try {
 
                 const cliente = await Cliente.findById(id);
