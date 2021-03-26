@@ -29,7 +29,7 @@ const resolvers = {
 
         obtenerUsuario: async(_, {}, ctx) => {
             // const usuarioId = await jwt.verify(token, process.env.salt);
-            console.log( ctx.usuario )
+            // console.log( ctx.usuario )
             return ctx.usuario;
         },
         //Productos
@@ -37,6 +37,7 @@ const resolvers = {
             try {
 
                 const productos = await Producto.find({});
+                // console.log( productos)
                 return productos;
 
             } catch (error) {
@@ -87,8 +88,6 @@ const resolvers = {
         obtenerCliente: async(_, { id }, ctx) => {
 
 
-            console.log( id );
-
             try {
 
                 const cliente = await Cliente.findById(id);
@@ -103,7 +102,7 @@ const resolvers = {
                 return cliente;
             } catch (error) {
 
-                console.log(error);
+                // console.log(error);
                 throw new Error('Algo pasó', error);
             }
         },
@@ -281,7 +280,7 @@ const resolvers = {
                 return resultado;
 
             } catch (error) {
-                console.log(error);
+                // console.log(error);
                 throw new Error('Se produjo un error', error);
             }
         },
