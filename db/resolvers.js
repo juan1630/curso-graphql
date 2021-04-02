@@ -50,6 +50,7 @@ const resolvers = {
 
         obtenerProducto: async(_, { id }) => {
             // revisar el producto existe 
+
             const producto = await Producto.findById(id);
 
             if (!producto) {
@@ -216,7 +217,6 @@ const resolvers = {
 
         nuevoUsuario: async(_, { input }) => {
 
-            console.log(input)
 
             const { email, password } = input;
 
@@ -286,7 +286,10 @@ const resolvers = {
         },
 
         // update actualizar el producto
-        actualizarProdcuto: async(_, { id, input }, ) => {
+        actualizarProdcuto: async(_, { id, input } ) => {
+
+            console.log( id, input );
+
             // revisamos el producto existe 
             let producto = await Producto.findById(id);
 
